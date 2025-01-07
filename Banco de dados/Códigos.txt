@@ -1,0 +1,531 @@
+CREATE DATABASE eletrodb
+
+
+-----------
+
+
+USE eletrodb
+
+
+-----------
+
+CREATE TABLE clientes
+     (Cli_cpf varchar (11) NOT null PRIMARY KEY,
+     Cli_nome varchar (50),
+     Cli_idade int (3),
+     Cli_sexo varchar (15),
+     Cli_estado varchar (2),
+     Cli_cidade varchar (30),
+     Cli_bairro varchar (50),
+     Cli_rua varchar (50),
+     Cli_email varchar (50),
+     Cli_fone varchar (11),
+     Cli_data date,
+     Cli_obs varchar (100))
+     ENGINE=INNODB;
+
+-----------
+
+CREATE TABLE lista
+     (List_cod int NOT null AUTO_INCREMENT PRIMARY KEY,
+      Cli_cpf varchar (11),
+      List_data date,
+      List_valor float (6,2), 
+      INDEX Cli_cpf(Cli_cpf),
+      FOREIGN KEY (Cli_cpf)
+      		REFERENCES clientes(Cli_cpf)
+      ON DELETE SET null)
+      ENGINE=INNODB;
+
+-----------
+
+CREATE TABLE fornecedor
+	(For_cod int NOT null AUTO_INCREMENT PRIMARY KEY,
+     For_nome varchar (50),
+     For_estado varchar (2),
+     For_cidade varchar (30),
+     For_bairro varchar (50),
+     For_rua varchar (50),
+     For_email varchar (50),
+     For_fone varchar (11),
+     For_obs varchar (100))
+     ENGINE=INNODB;
+
+-----------
+
+CREATE TABLE produto
+	(Prod_cod int NOT null AUTO_INCREMENT PRIMARY KEY,
+     For_cod int,
+     Prod_nome varchar (30),
+     Prod_marca varchar (30),
+     Prod_valor float (6,2),
+     Prod_quant int,
+     Prod_desc varchar (100),
+     INDEX For_cod(For_cod),
+     FOREIGN KEY (For_cod)
+      		REFERENCES fornecedor(For_cod)
+     ON DELETE SET null)
+     ENGINE=INNODB;
+
+-----------
+
+CREATE TABLE compras
+	(Com_cod int NOT null AUTO_INCREMENT PRIMARY KEY,
+     List_cod int,
+     Prod_cod int,
+     Com_quant int,
+     INDEX List_cod(List_cod),
+     FOREIGN KEY (List_cod)
+      		REFERENCES lista(List_cod)
+     ON DELETE SET null,
+     INDEX Prod_cod(Prod_cod),
+     FOREIGN KEY (Prod_cod)
+      		REFERENCES produto(Prod_cod)
+     ON DELETE SET null)
+     ENGINE=INNODB;
+
+-----------
+
+CREATE TABLE entregadores
+     (FEnt_cod int NOT null AUTO_INCREMENT PRIMARY KEY,
+     FEnt_cpf varchar (11),
+     FEnt_nome varchar (50),
+     FEnt_idade int (3),
+     FEnt_sexo varchar (15),
+     FEnt_estado varchar (2),
+     FEnt_cidade varchar (30),
+     FEnt_bairro varchar (50),
+     FEnt_rua varchar (50),
+     FEnt_email varchar (50),
+     FEnt_fone varchar (11),
+     FEnt_data date,
+     FEnt_obs varchar (100))
+     ENGINE=INNODB;
+
+-----------
+
+
+CREATE TABLE ServEntrega
+	(SEnt_cod int NOT null AUTO_INCREMENT PRIMARY KEY,
+     List_cod int,
+     FEnt_cod int,
+     SEnt_saida date,
+     SEnt_entrega date,
+     INDEX List_cod(List_cod),
+     FOREIGN KEY (List_cod)
+      		REFERENCES lista(List_cod)
+     ON DELETE SET null,
+     INDEX FEnt_cod(FEnt_cod),
+     FOREIGN KEY (FEnt_cod)
+      		REFERENCES entregadores(FEnt_cod)
+     ON DELETE SET null)
+     ENGINE=INNODB;
+
+-----------
+
+CREATE TABLE pagamento
+	(Pag_cod int NOT null AUTO_INCREMENT PRIMARY KEY,
+     List_cod int,
+     Pag_form varchar (10),
+     Pag_data date,
+     INDEX List_cod(List_cod),
+     FOREIGN KEY (List_cod)
+      		REFERENCES lista(List_cod)
+     ON DELETE SET null)
+     ENGINE=INNODB;
+
+-----------
+
+CREATE TABLE avaliacaocomentario
+	(AC_cod int NOT null AUTO_INCREMENT PRIMARY KEY,
+     List_cod int,
+     AC_nota int (1),
+     AC_comen varchar (100),
+     INDEX List_cod(List_cod),
+     FOREIGN KEY (List_cod)
+      		REFERENCES lista(List_cod)
+     ON DELETE SET null)
+     ENGINE=INNODB;
+
+-----------
+
+CREATE TABLE Duvidas
+	(Duv_cod int NOT null AUTO_INCREMENT PRIMARY KEY,
+     List_cod int,
+     Duv_comen varchar (100),
+     Duv_data date,
+     INDEX List_cod(List_cod),
+     FOREIGN KEY (List_cod)
+      		REFERENCES lista(List_cod)
+     ON DELETE SET null)
+     ENGINE=INNODB;
+
+-----------
+
+
+CREATE TABLE adm
+	(Fadm_cod int NOT null AUTO_INCREMENT PRIMARY KEY,
+     Fadm_cpf varchar (11),
+     Fadm_nome varchar (50),
+     Fadm_idade int (3),
+     Fadm_sexo varchar (15),
+     Fadm_estado varchar (2),
+     Fadm_cidade varchar (30),
+     Fadm_bairro varchar (50),
+     Fadm_rua varchar (50),
+     Fadm_email varchar (50),
+     Fadm_fone varchar (11),
+     Fadm_data date,
+     Fadm_obs varchar (100))
+     ENGINE=INNODB;
+
+-----------
+
+CREATE TABLE resposta
+	(Resp_cod int NOT null AUTO_INCREMENT PRIMARY KEY,
+     Duv_cod int,
+     Fadm_cod int,
+     Resp_comen varchar (100),
+     Resp_data date,
+     INDEX Duv_cod(Duv_cod),
+     FOREIGN KEY (Duv_cod)
+      		REFERENCES duvidas(Duv_cod)
+     ON DELETE SET null)
+     ENGINE=INNODB;
+
+-----------
+
+INSERT INTO clientes
+	(Cli_cpf,Cli_nome,Cli_idade,Cli_sexo,Cli_estado,Cli_cidade,Cli_bairro,Cli_rua,Cli_email,Cli_fone,Cli_data,Cli_obs)
+	VALUES
+	("11111111111","João Ferreira",24,"masculino","RS","Gravatai","Morada Gaucha","Cavalhada n123","joaoferreira@gmail.com","12121212121",'2021-8-9',"");
+
+-----------
+
+INSERT INTO clientes
+	(Cli_cpf,Cli_nome,Cli_idade,Cli_sexo,Cli_estado,Cli_cidade,Cli_bairro,Cli_rua,Cli_email,Cli_fone,Cli_data,Cli_obs)
+	VALUES
+	("2222222222","Maria da Silva",20,"feminino","RS","Gravatai","Morada Gaucha","Cavalhada n321","mariasilva@gmail.com","34343434343",'2020-10-10',"");
+
+-----------
+
+INSERT INTO clientes
+	(Cli_cpf,Cli_nome,Cli_idade,Cli_sexo,Cli_estado,Cli_cidade,Cli_bairro,Cli_rua,Cli_email,Cli_fone,Cli_data,Cli_obs)
+	VALUES
+	("33333333333","Marcio Luis",34,"masculino","RS","Gravatai","São Vicente","Marco Polo n123","marcioluis@gmail.com","56565656565",'2021-12-9',"");
+
+-----------
+
+INSERT INTO clientes
+	(Cli_cpf,Cli_nome,Cli_idade,Cli_sexo,Cli_estado,Cli_cidade,Cli_bairro,Cli_rua,Cli_email,Cli_fone,Cli_data,Cli_obs)
+	VALUES
+	("44444444444","Gabriel Oliveira",26,"masculino","RS","Gravatai","São Vicente","Marco Polo n321","gabrieloliveira@gmail.com","78787878787",'2021-4-2',"");
+
+-----------
+
+INSERT INTO lista
+	(Cli_cpf,List_data,List_valor)
+	VALUES
+	("11111111111",'2023-1-12',200.00);
+
+-----------
+
+INSERT INTO lista
+	(Cli_cpf,List_data,List_valor)
+	VALUES
+	("2222222222",'2023-4-5',400.00);
+
+-----------
+
+INSERT INTO lista
+	(Cli_cpf,List_data,List_valor)
+	VALUES
+	("33333333333",'2023-7-2',200.00);
+
+-----------
+
+INSERT INTO lista
+	(Cli_cpf,List_data,List_valor)
+	VALUES
+	("44444444444",'2023-10-10',450.00);
+
+-----------
+
+INSERT INTO fornecedor
+	(For_nome,For_estado,For_cidade,For_bairro,For_rua,For_email,For_fone,For_obs)
+	VALUES
+	("Eletronicos GB","RS","Gravatai","São Vicente","Marco Polo n456","eletronicosgb@gmail.com","21212121212","");
+
+-----------
+
+INSERT INTO fornecedor
+	(For_nome,For_estado,For_cidade,For_bairro,For_rua,For_email,For_fone,For_obs)
+	VALUES
+	("Tech W","RS","Gravatai","Oriçó","Euclidis Linck n456","techw@gmail.com","43434343434","");
+
+-----------
+
+INSERT INTO fornecedor
+	(For_nome,For_estado,For_cidade,For_bairro,For_rua,For_email,For_fone,For_obs)
+	VALUES
+	("LS Tec","RS","Gravatai","Morada Gaucha","Cavalhada n888","lstec@gmail.com","65656565656","");
+
+-----------
+
+INSERT INTO fornecedor
+	(For_nome,For_estado,For_cidade,For_bairro,For_rua,For_email,For_fone,For_obs)
+	VALUES
+	("WWW Nerd","RS","Gravatai","São Vicente","Marco Polo n999","wwwnerd@gmail.com","87878787987","")
+
+-----------
+
+INSERT INTO produto
+	(For_cod,Prod_nome,Prod_marca,Prod_valor,Prod_quant,Prod_desc)
+	VALUES
+	(1,"Mouse","MBtech",25.00,50,"")
+
+-----------
+
+INSERT INTO produto
+	(For_cod,Prod_nome,Prod_marca,Prod_valor,Prod_quant,Prod_desc)
+	VALUES
+	(1,"Teclado","MBtech",50.00,50,"")
+
+-----------
+
+INSERT INTO produto
+	(For_cod,Prod_nome,Prod_marca,Prod_valor,Prod_quant,Prod_desc)
+	VALUES
+	(3,"Notebook","Lenovo",1500.00,20,"")
+
+-----------
+
+INSERT INTO produto
+	(For_cod,Prod_nome,Prod_marca,Prod_valor,Prod_quant,Prod_desc)
+	VALUES
+	(4,"Notebook","Samsung",2000.00,20,"")
+
+-----------
+
+INSERT INTO compras
+	(List_cod,Prod_cod,Com_quant)
+	VALUES
+	(1,2,4)
+
+-----------
+
+INSERT INTO compras
+	(List_cod,Prod_cod,Com_quant)
+	VALUES
+	(3,2,4)
+
+-----------
+
+INSERT INTO compras
+	(List_cod,Prod_cod,Com_quant)
+	VALUES
+	(4,2,9)
+
+-----------
+
+INSERT INTO compras
+	(List_cod,Prod_cod,Com_quant)
+	VALUES
+	(2,2,8)
+
+-----------
+
+INSERT INTO entregadores
+	(FEnt_cpf,FEnt_nome,FEnt_idade,FEnt_sexo,FEnt_estado,FEnt_cidade,FEnt_bairro,FEnt_rua,FEnt_email,FEnt_fone,FEnt_data,FEnt_obs)
+	VALUES
+	("24565324555","Gabriela Matos",36,"feminino","RS","Gravatai","São Vicente","Marco Polo n321","gabrielamatos@gmail.com","24538645568",'2021-4-2',"");
+
+-----------
+
+INSERT INTO entregadores
+	(FEnt_cpf,FEnt_nome,FEnt_idade,FEnt_sexo,FEnt_estado,FEnt_cidade,FEnt_bairro,FEnt_rua,FEnt_email,FEnt_fone,FEnt_data,FEnt_obs)
+	VALUES
+	("25688686945","Mateus Lucas",34,"masculino","RS","Gravatai","São Vicente","Marco Polo n583","mateuslucas@gmail.com","46589997778",'2021-12-9',"");
+
+-----------
+
+INSERT INTO entregadores
+	(FEnt_cpf,FEnt_nome,FEnt_idade,FEnt_sexo,FEnt_estado,FEnt_cidade,FEnt_bairro,FEnt_rua,FEnt_email,FEnt_fone,FEnt_data,FEnt_obs)
+	VALUES
+    ("35696999689","Marta Silva",29,"feminino","RS","Gravatai","Morada Gaucha","Cavalhada n3431","martasilva@gmail.com","25864366868",'2020-10-10',"");
+
+-----------
+
+INSERT INTO entregadores
+	(FEnt_cpf,FEnt_nome,FEnt_idade,FEnt_sexo,FEnt_estado,FEnt_cidade,FEnt_bairro,FEnt_rua,FEnt_email,FEnt_fone,FEnt_data,FEnt_obs)
+	VALUES
+    ("77788877796","José Carlos",42,"masculino","RS","Gravatai","Morada Gaucha","Cavalhada n253","josecarlos@gmail.com","44455566689",'2021-8-9',"");
+
+-----------
+
+INSERT INTO serventrega
+	(List_cod,FEnt_cod,SEnt_saida,SEnt_entrega)
+	VALUES
+    (1,1,'2023-1-12','2023-1-12');
+
+-----------
+
+INSERT INTO serventrega
+	(List_cod,FEnt_cod,SEnt_saida,SEnt_entrega)
+	VALUES
+    (2,1,'2023-4-5','2023-4-5');
+
+-----------
+
+INSERT INTO serventrega
+	(List_cod,FEnt_cod,SEnt_saida,SEnt_entrega)
+	VALUES
+    (3,1,'2023-7-2','2023-7-2');
+
+-----------
+
+INSERT INTO serventrega
+	(List_cod,FEnt_cod,SEnt_saida,SEnt_entrega)
+	VALUES
+    (4,1,'2023-10-10','2023-10-10');
+
+-----------
+
+INSERT INTO pagamento
+	(List_cod,Pag_form,Pag_data)
+	VALUES
+    (4,"pix",'2023-10-10');
+
+-----------
+
+INSERT INTO pagamento
+	(List_cod,Pag_form,Pag_data)
+	VALUES
+    (1,"pix",'2023-1-12');
+
+-----------
+
+INSERT INTO pagamento
+	(List_cod,Pag_form,Pag_data)
+	VALUES
+    (2,"pix",'2023-4-5');
+
+-----------
+
+INSERT INTO pagamento
+	(List_cod,Pag_form,Pag_data)
+	VALUES
+    (3,"pix",'2023-7-2');
+
+-----------
+
+INSERT INTO avaliacaocomentario
+	(List_cod,Ac_nota,AC_comen)
+	VALUES
+    (3,9,"produtos otimos");
+
+-----------
+
+INSERT INTO avaliacaocomentario
+	(List_cod,Ac_nota,AC_comen)
+	VALUES
+    (4,8,"Adorei");
+
+-----------
+
+INSERT INTO avaliacaocomentario
+	(List_cod,Ac_nota,AC_comen)
+	VALUES
+    (1,9,"recomendo");
+
+-----------
+
+INSERT INTO avaliacaocomentario
+	(List_cod,Ac_nota,AC_comen)
+	VALUES
+    (2,7,"gostei bastante");
+
+-----------
+
+INSERT INTO duvidas
+	(List_cod,Duv_comen,Duv_data)
+	VALUES
+    (1,"Quando chega?",'2023-1-12');
+
+-----------
+
+INSERT INTO duvidas
+	(List_cod,Duv_comen,Duv_data)
+	VALUES
+    (2,"Quando chega?",'2023-1-12');
+
+-----------
+
+INSERT INTO duvidas
+	(List_cod,Duv_comen,Duv_data)
+	VALUES
+    (3,"Quando chega?",'2023-7-2');
+
+-----------
+
+INSERT INTO duvidas
+	(List_cod,Duv_comen,Duv_data)
+	VALUES
+    (4,"Quando chega?",'2023-10-10');
+
+-----------
+
+INSERT INTO adm
+	(Fadm_cpf,Fadm_nome,Fadm_idade,Fadm_sexo,Fadm_estado,Fadm_cidade,Fadm_bairro,Fadm_rua,Fadm_email,Fadm_fone,Fadm_data,Fadm_obs)
+	VALUES
+	("55533887668","Jessica de Andrade",26,"feminino","RS","Gravatai","São Vicente","Marco Polo n41","jessicaandrade@gmail.com","74537748885",'2021-4-2',"");
+
+-----------
+
+INSERT INTO adm
+	(Fadm_cpf,Fadm_nome,Fadm_idade,Fadm_sexo,Fadm_estado,Fadm_cidade,Fadm_bairro,Fadm_rua,Fadm_email,Fadm_fone,Fadm_data,Fadm_obs)
+	VALUES
+	("97979891919","Marcelo Peixoto",34,"masculino","RS","Gravatai","São Vicente","Marco Polo n83","marcelopeixoto@gmail.com","46464646644",'2021-12-9',"");
+
+-----------
+
+INSERT INTO adm
+	(Fadm_cpf,Fadm_nome,Fadm_idade,Fadm_sexo,Fadm_estado,Fadm_cidade,Fadm_bairro,Fadm_rua,Fadm_email,Fadm_fone,Fadm_data,Fadm_obs)
+	VALUES
+    ("35353535353","Michele de Lima",29,"feminino","RS","Gravatai","Morada Gaucha","Cavalhada n31","michelelima@gmail.com","38383838383",'2020-10-10',"");
+
+-----------
+
+INSERT INTO adm
+	(Fadm_cpf,Fadm_nome,Fadm_idade,Fadm_sexo,Fadm_estado,Fadm_cidade,Fadm_bairro,Fadm_rua,Fadm_email,Fadm_fone,Fadm_data,Fadm_obs)
+	VALUES
+    ("88899962145","José Mateus",20,"masculino","RS","Gravatai","Morada Gaucha","Cavalhada n53","josemateus@gmail.com","83884492199",'2021-8-9',"");
+
+-----------
+
+INSERT INTO resposta
+	(Duv_cod,Fadm_cod,Resp_comen,Resp_data)
+	VALUES
+    (4,1,"Hoje mesmo",'2023-10-10');
+
+-----------
+
+INSERT INTO resposta
+	(Duv_cod,Fadm_cod,Resp_comen,Resp_data)
+	VALUES
+    (3,1,"Hoje mesmo",'2023-7-2');
+
+-----------
+
+INSERT INTO resposta
+	(Duv_cod,Fadm_cod,Resp_comen,Resp_data)
+	VALUES
+    (2,1,"Hoje mesmo",'2023-1-12');
+
+-----------
+
+INSERT INTO resposta
+	(Duv_cod,Fadm_cod,Resp_comen,Resp_data)
+	VALUES
+    (1,1,"Hoje mesmo",'2023-1-12');
+
