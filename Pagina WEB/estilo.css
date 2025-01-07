@@ -1,0 +1,14 @@
+.cabeca{
+    height: 50px;
+    width: 1000px;
+    background-color: lightseagreen;
+}
+
+input{
+    width: 10%;
+    margin: 0.5%;
+}
+button{
+    width: 10%;
+    margin: 1%;
+}
