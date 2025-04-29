@@ -1,0 +1,8 @@
+body, #cabecalho, #botoes{
+    background-color: black;
+}
+
+#imgBanner, #areaFoto{
+    height: 250px;
+}
+
